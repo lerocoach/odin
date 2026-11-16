@@ -4,10 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Один проект 2027</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>/* Telegram SDK грузим только внутри Telegram и не блокируя страницу */
+if(/tgWebApp/.test(location.hash+location.search)||window.TelegramWebviewProxy){var t=document.createElement("script");t.src="https://telegram.org/js/telegram-web-app.js";t.async=true;t.onload=function(){try{Telegram.WebApp.ready();Telegram.WebApp.expand();}catch(e){}};document.head.appendChild(t);}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
 :root{
   --bg:#fbf8f2; --surface:#fff; --ink:#1b2236; --muted:#7c8193; --line:#ece4d4;
@@ -113,8 +114,7 @@ ul.clean li{margin:4px 0}
 <div class="toast" id="toast"></div>
 
 <script>
-const tg = window.Telegram && window.Telegram.WebApp;
-try{ if(tg){ tg.ready(); tg.expand(); } }catch(e){}
+
 
 const KEY='odin-proekt-2027-v1';
 const blank=()=>({
