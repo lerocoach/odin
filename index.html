@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Один проект 2027</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fbf8f2; --surface:#fff; --ink:#1b2236; --muted:#7c8193; --line:#ece4d4;
+  --navy:#1b2a4a; --navy-soft:#e9edf6; --gold:#b8924a; --gold-soft:#f5ecdb;
+  --ok:#3a9d6e; --ok-soft:#e4f4ec; --warn:#c9822b; --warn-soft:#fbf0de; --no:#c95b5b; --no-soft:#fbeaea;
+  --shadow:0 1px 2px rgba(27,34,54,.04),0 10px 28px rgba(27,42,74,.07);
+  --serif:"Fraunces",Georgia,serif;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font:16px/1.5 var(--sans);min-height:100vh;padding-bottom:calc(96px + env(safe-area-inset-bottom));
+  background:radial-gradient(120% 50% at 50% -10%,#f3e6cc 0%,var(--bg) 60%) fixed}
+.wrap{max-width:480px;margin:0 auto;padding:18px 16px 0}
+h1,h2{font-family:var(--serif);font-weight:500;letter-spacing:-.015em;margin:0}
+h1{font-size:34px;line-height:1.08}
+h2{font-size:26px;line-height:1.15;margin-bottom:8px}
+p{margin:0 0 12px}
+.muted{color:var(--muted);font-size:14px}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.card{background:var(--surface);border-radius:22px;padding:20px;box-shadow:var(--shadow);margin-bottom:14px}
+.card.gold{background:var(--gold-soft);box-shadow:none;border:1px solid #ead9b6}
+.card.navy{background:var(--navy);color:#fff}
+.card.navy .muted{color:#b9c2d8}
+label.q{display:block;font-weight:600;margin:14px 0 6px}
+label.q:first-child{margin-top:0}
+.hint{font-size:13px;color:var(--muted);margin:-2px 0 6px}
+textarea,input[type=text]{width:100%;font:inherit;font-size:16px;color:var(--ink);background:#fff;border:1.5px solid var(--line);
+  border-radius:14px;padding:12px 14px;outline:none;transition:border-color .2s}
+textarea{min-height:76px;resize:vertical}
+textarea:focus,input[type=text]:focus{border-color:var(--gold)}
+.plist{display:grid;gap:8px}
+.prow{display:flex;gap:10px;align-items:center}
+.prow .n{flex:none;width:28px;height:28px;border-radius:50%;background:var(--navy-soft);color:var(--navy);font-size:13px;font-weight:700;display:grid;place-items:center}
+.opt{appearance:none;width:100%;border:1.5px solid var(--line);background:#fff;color:var(--ink);font:inherit;font-size:15px;
+  text-align:left;padding:12px 14px;border-radius:16px;cursor:pointer;display:flex;gap:12px;align-items:center;margin-bottom:8px;transition:all .15s}
+.opt:active{transform:scale(.985)}
+.opt .box{flex:none;width:22px;height:22px;border-radius:7px;border:1.5px solid #cfc6b3;display:grid;place-items:center;font-size:14px;color:#fff}
+.opt.radio .box{border-radius:50%}
+.opt.on{border-color:var(--navy);background:var(--navy-soft)}
+.opt.on .box{background:var(--navy);border-color:var(--navy)}
+.opt .t{flex:1}
+.dots{display:flex;gap:4px}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.dots i.f{background:var(--gold)}
+.seg{display:grid;grid-template-columns:repeat(var(--c,2),1fr);gap:8px;margin-bottom:6px}
+.seg button{appearance:none;font:inherit;font-size:15px;font-weight:600;border:1.5px solid var(--line);background:#fff;color:var(--ink);
+  border-radius:14px;padding:11px 6px;cursor:pointer}
+.seg button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:6px 0 4px}
+.scale button{appearance:none;font:inherit;font-weight:700;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 0;cursor:pointer;color:var(--ink)}
+.scale button.on{background:var(--gold);border-color:var(--gold);color:#fff}
+.scalelbl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.stmt{padding:14px 0;border-bottom:1px solid var(--line)}
+.stmt:last-child{border-bottom:0}
+.trap{border:1.5px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:8px;background:#fff}
+.trap.on{border-color:var(--gold);background:var(--gold-soft)}
+.trap .h{display:flex;gap:10px;align-items:center;cursor:pointer;font-weight:600}
+.trap .h .box{flex:none;width:22px;height:22px;border-radius:7px;border:1.5px solid #cfc6b3;display:grid;place-items:center;color:#fff;font-size:14px}
+.trap.on .h .box{background:var(--gold);border-color:var(--gold)}
+.trap .body{display:none;margin-top:10px}
+.trap.on .body{display:block}
+.alert{border-radius:16px;padding:14px 16px;margin:12px 0;font-size:15px}
+.alert.warn{background:var(--warn-soft);color:#7a4c12}
+.alert.ok{background:var(--ok-soft);color:#215c41}
+.rec{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.rec:last-child{border-bottom:0}
+.rec b{display:block;margin-bottom:2px}
+.rec .ic{flex:none;width:34px;height:34px;border-radius:50%;background:var(--gold-soft);display:grid;place-items:center;font-size:17px}
+.pcard .line{font-family:var(--serif);font-size:26px;line-height:1.2;margin:4px 0 16px}
+.pcard .row{padding:10px 0;border-top:1px solid rgba(255,255,255,.14)}
+.pcard .row .k{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#d8c08f;margin-bottom:2px}
+.progress{height:6px;border-radius:6px;background:var(--line);overflow:hidden;margin:4px 0 18px}
+.progress i{display:block;height:100%;background:var(--gold);transition:width .4s}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);font-weight:600}
+.grid42{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:10px}
+.grid42 div{aspect-ratio:1;border-radius:9px;background:var(--line);display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--muted)}
+.grid42 .yes{background:var(--ok);color:#fff}
+.grid42 .part{background:#e7c27c;color:#fff}
+.grid42 .no{background:var(--no-soft);color:var(--no)}
+.grid42 .today{outline:2px solid var(--navy);outline-offset:1px}
+.grid42 .future{background:transparent;border:1.5px dashed var(--line)}
+.bigq{font-family:var(--serif);font-size:23px;line-height:1.25;margin:4px 0 0}
+.bar{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  background:linear-gradient(to top,var(--bg) 70%,rgba(251,248,242,0));}
+.bar .in{max-width:480px;margin:0 auto;display:flex;gap:10px}
+.btn{appearance:none;flex:1;font:inherit;font-size:16px;font-weight:600;border-radius:16px;padding:15px 16px;cursor:pointer;border:1.5px solid var(--navy);background:var(--navy);color:#fff}
+.btn.ghost{flex:0 0 auto;background:#fff;color:var(--navy);border-color:var(--line)}
+.btn.small{flex:none;padding:10px 14px;font-size:14px}
+.btn.soft{background:#fff;color:var(--navy);border-color:var(--navy)}
+.toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;
+  padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:all .25s;pointer-events:none;max-width:90%;text-align:center;z-index:9}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+ul.clean{padding-left:18px;margin:6px 0}
+ul.clean li{margin:4px 0}
+.reset{display:block;margin:24px auto 0;background:none;border:0;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="bar"><div class="in" id="bar"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const tg = window.Telegram && window.Telegram.WebApp;
+try{ if(tg){ tg.ready(); tg.expand(); } }catch(e){}
+
+const KEY='odin-proekt-2027-v1';
+const blank=()=>({
+  step:0,
+  year:{did:'',fail:'',traps:[],trapFix:{},thoughts:''},
+  projects:Array(15).fill(''),
+  q1:[],q2:null,q3:[],chosen:null,
+  check:{want:null,ready:null,urgent:null,source:null},
+  f:{line:'',done:'',behavior:'',who:'',obstacle:'',ifthen:''},
+  t:Array(10).fill(null),
+  plan:{min:null,when:'',first:'',buddy:'',deadline:''},
+  start:null, log:{}
+});
+let S;
+try{ S=JSON.parse(localStorage.getItem(KEY)) || blank(); }catch(e){ S=blank(); }
+S=Object.assign(blank(),S);
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
+
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=s=>document.querySelector(s);
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2200);}
+function getPath(k){return k.split('.').reduce((o,p)=>o==null?o:o[p],S);}
+function setPath(k,v){const ps=k.split('.');let o=S;for(let i=0;i<ps.length-1;i++)o=o[ps[i]];o[ps[ps.length-1]]=v;}
+const filled=()=>S.projects.map((t,i)=>({i,t:t.trim()})).filter(x=>x.t);
+const ptext=i=>(S.projects[i]||'').trim();
+
+function ymd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function parseYmd(s){const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);}
+function dayN(){ if(!S.start) return 0; const a=parseYmd(S.start), b=parseYmd(ymd(new Date())); return Math.round((b-a)/864e5)+1; }
+
+/* ---------- данные ---------- */
+const TRAPS=[
+ {id:'me',t:'«Это со мной что-то не так»',fix:'Что произошло по фактам, без оценки себя? Какие внешние обстоятельства или особенности тела и характера на это повлияли?'},
+ {id:'always',t:'«Так всегда»',fix:'Вспомните хотя бы три случая в этом году, когда было иначе. Что тогда было по-другому?'},
+ {id:'all',t:'«Так во всём»',fix:'В какой конкретно области это случилось? А какие области жизни в этом году шли нормально или хорошо?'}
+];
+const STMT=[
+ {tr:'O',t:'Мне быстро становится скучно от однообразия, тянет к новому'},
+ {tr:'C',t:'Я довожу начатое до конца, даже когда интерес прошёл'},
+ {tr:'E',t:'Я заряжаюсь от людей и общения'},
+ {tr:'A',t:'Ради другого человека мне проще сделать, чем ради себя'},
+ {tr:'N',t:'Я часто тревожусь и прокручиваю мысли'},
+ {tr:'O',t:'Мне важна красота: в вещах, в процессе, в том, как всё устроено'},
+ {tr:'C',t:'Мне нравится планировать и отмечать сделанное'},
+ {tr:'E',t:'Мне легко рассказывать о своих планах вслух'},
+ {tr:'A',t:'Мне важно не подвести тех, кто на меня рассчитывает'},
+ {tr:'N',t:'Неудача надолго выбивает меня из колеи'}
+];
+const REC={
+ O:{name:'Открытость',ic:'✦',hi:'Сделайте процесс красивым и разным: меняйте формат, место, маршрут. Скука ваш главный враг, ищите вариант, который нравится сам по себе.',lo:'Держитесь одного понятного маршрута. Эксперименты с форматом будут отвлекать.'},
+ C:{name:'Кропотливость',ic:'☑',hi:'Вам помогут план, трекер и дедлайн. Отмечайте каждый день, это даёт вам энергию.',lo:'Без жёсткого дедлайна. Правило: следующий проект только после этого. Шаги по 15 минут, а не героические рывки.'},
+ E:{name:'Общительность',ic:'☀',hi:'Говорите о проекте вслух: напарник, группа, короткий отчёт в сторис раз в неделю.',lo:'Работайте в тишине. Один надёжный напарник лучше группы и публичных обещаний.'},
+ A:{name:'Сговорчивость',ic:'♡',hi:'Возьмите обязательство перед человеком: напарник, тренер, договорённость. Ради другого вы сделаете больше, чем ради себя.',lo:'Опирайтесь на свою выгоду: что лично вы получите, когда проект будет готов.'},
+ N:{name:'Чувствительность к стрессу',ic:'≈',hi:'Сначала снижайте тревогу: очень маленькие шаги, без громких обещаний, заранее готовый план на срыв.',lo:'Можно брать смелые шаги и вызовы, срыв не выбьет вас надолго.'}
+};
+const DAILY=[
+ 'Что вчера получилось, хотя могло не получиться?',
+ 'Какой маленький шаг сегодня приблизит вас к признаку «готово»?',
+ 'Что вы делаете иначе, чем месяц назад?',
+ 'Если бы вы из марта посмотрели на вас сегодняшнюю, что бы отметили?',
+ 'Что сегодня может помешать, и какое у вас «если... то...»?',
+ 'Какой факт за эту неделю говорит, что вы справляетесь?',
+ 'Что вам нравится в самом процессе, а не только в результате?',
+ 'Кому вы сегодня расскажете о прогрессе?',
+ 'Какая мысль о себе сегодня факт, а какая значение?',
+ 'Где сегодня вы хотя бы минуту вели себя по-новому?',
+ 'Что стало легче, чем в первые дни?',
+ 'Что бы вы сказали подруге или другу на своём месте?',
+ 'Что на этой неделе вы сделали, хотя не хотелось? О чём это говорит?',
+ 'Какой шаг вы откладываете, и какой самый маленький его кусок?'
+];
+
+function traitScores(){
+  const sc={};['O','C','E','A','N'].forEach(k=>{const v=STMT.map((s,i)=>s.tr===k?S.t[i]:null).filter(x=>x!=null);sc[k]=v.length?v.reduce((a,b)=>a+b,0)/v.length:3;});
+  return sc;
+}
+function lvl(v){return v>=3.75?'hi':v<=2.25?'lo':'mid';}
+
+/* ---------- шаги ---------- */
+const STEPS=[
+ {id:'intro',render:()=>`
+  <div class="kicker">Тренажёр</div>
+  <h1>Один проект<br>на 2027</h1>
+  <p class="muted" style="margin-top:10px">Не список из десяти желаний, а одна цель, которая сдвинет остальные. И способ идти к ней без героизма.</p>
+  <div class="card" style="margin-top:18px">
+   <b>Как это устроено</b>
+   <ul class="clean">
+    <li>Вечер выбора: 60 до 90 минут, 10 коротких шагов.</li>
+    <li>Карточка проекта: цель в одну строку и план.</li>
+    <li>42 дня: каждый день одна отметка и один вопрос.</li>
+   </ul>
+   <p class="muted" style="margin:8px 0 0">Ответы сохраняются на этом устройстве. Можно прерваться и вернуться.</p>
+  </div>
+  <div class="card gold"><b>Совет:</b> выделите спокойный вечер, налейте чай и отвечайте письменно. Мысли в голове ходят по кругу, на бумаге они становятся фактами.</div>`},
+
+ {id:'year',title:'Разбор года',render:()=>`
+  <h2>Каким был ваш 2026</h2>
+  <p class="muted">Без самобичевания. Мы смотрим на год как на отчёт: где цифра, а где домысел.</p>
+  <div class="card">
+   <label class="q">Что получилось в этом году, хотя было трудно?</label>
+   <textarea data-k="year.did" placeholder="Даже маленькое считается">${esc(S.year.did)}</textarea>
+   <label class="q">Что не получилось? Только факты</label>
+   <div class="hint">Что конкретно, где, сколько раз. Без слов «опять», «как всегда».</div>
+   <textarea data-k="year.fail">${esc(S.year.fail)}</textarea>
+  </div>
+  <div class="card">
+   <b>Какие мысли были про это «не получилось»?</b>
+   <p class="muted" style="margin:4px 0 12px">Отметьте, если узнаёте себя. Откроется вопрос, который возвращает к фактам.</p>
+   ${TRAPS.map(tr=>`<div class="trap ${S.year.traps.includes(tr.id)?'on':''}" data-trap="${tr.id}">
+     <div class="h"><span class="box">✓</span>${tr.t}</div>
+     <div class="body"><div class="hint">${tr.fix}</div><textarea data-k="year.trapFix.${tr.id}">${esc(S.year.trapFix[tr.id]||'')}</textarea></div>
+   </div>`).join('')}
+  </div>
+  <div class="card">
+   <label class="q">Какие мысли о себе вы забираете в 2027?</label>
+   <div class="hint">Например: «я умею доводить, когда это важно», «я справляюсь, даже когда страшно»</div>
+   <textarea data-k="year.thoughts">${esc(S.year.thoughts)}</textarea>
+  </div>`},
+
+ {id:'list',title:'15 проектов',render:()=>`
+  <h2>15 проектов</h2>
+  <p class="muted">Запишите всё, в чём вам хотелось бы добиться успеха. Большое и маленькое, разумное и смелое. Не выбирайте пока, просто пишите. Минимум 5.</p>
+  <div class="card plist">
+   ${S.projects.map((p,i)=>`<div class="prow"><span class="n">${i+1}</span><input type="text" data-k="projects.${i}" value="${esc(p)}" placeholder="${i===0?'Например: выйти на доход 300 тысяч':i===1?'Например: пробежать полумарафон':''}"></div>`).join('')}
+  </div>`},
+
+ {id:'q1',title:'Вопрос 1',render:()=>`
+  <div class="kicker">Вопрос 1 из 3</div>
+  <h2>Если бы у вас оставалось 12 месяцев жизни</h2>
+  <p class="muted">Какие три проекта из списка вы бы выбрали? Отметьте до трёх.</p>
+  <div class="card">${filled().map(x=>opt(x,S.q1.includes(x.i),'q1')).join('')}</div>`},
+
+ {id:'q2',title:'Вопрос 2',render:()=>`
+  <div class="kicker">Вопрос 2 из 3</div>
+  <h2>Если можно сделать только один, но идеально</h2>
+  <p class="muted">Какой проект вы бы выбрали? Лучше тот, который закроет необходимость в остальных.</p>
+  <div class="card">${filled().map(x=>opt(x,S.q2===x.i,'q2',true)).join('')}</div>`},
+
+ {id:'q3',title:'Вопрос 3',render:()=>`
+  <div class="kicker">Вопрос 3 из 3</div>
+  <h2>Что нужно сделать в первую очередь</h2>
+  <p class="muted">Ради безопасности и базовых потребностей: жильё, деньги на жизнь, здоровье, люди рядом. Если всё это закрыто, ничего не отмечайте.</p>
+  <div class="card">${filled().map(x=>opt(x,S.q3.includes(x.i),'q3')).join('')}</div>`},
+
+ {id:'result',title:'Ваш проект',render:()=>{
+  const r=suggest();
+  const items=filled().map(x=>({...x,sc:score(x.i)})).sort((a,b)=>b.sc-a.sc);
+  if(S.chosen==null||!ptext(S.chosen)){S.chosen=r.i;save();}
+  return `
+  <h2>Что показали ответы</h2>
+  <div class="alert ${r.need?'warn':'ok'}">${r.msg}</div>
+  <p class="muted">Точки показывают, в скольких вопросах проект отмечен. Выберите один проект на ближайшие месяцы.</p>
+  <div class="card">${items.map(x=>`<button class="opt radio ${S.chosen===x.i?'on':''}" data-act="choose" data-i="${x.i}">
+     <span class="box">✓</span><span class="t">${esc(x.t)}</span>
+     <span class="dots">${[0,1,2].map(k=>`<i class="${k<x.sc?'f':''}"></i>`).join('')}</span></button>`).join('')}</div>
+  <div class="card gold"><b>Почему один?</b><br>Пока этот проект не завершён, следующий не начинаем. Хочется быстрее к следующему: завершите этот.</div>`;}},
+
+ {id:'check',title:'Проверка',render:()=>{
+  const c=S.check;
+  const bad=[c.want,c.ready,c.urgent].includes('no')||(c.source&&c.source!=='inner');
+  const done=c.want&&c.ready&&c.urgent&&c.source;
+  return `
+  <h2>Это точно ваша цель?</h2>
+  <div class="card navy"><div class="muted">Проект</div><div style="font-family:var(--serif);font-size:22px;margin-top:2px">${esc(ptext(S.chosen))}</div></div>
+  <div class="card">
+   ${yn('want','Вы этого хотите? По-настоящему, а не «надо»')}
+   ${yn('ready','Вы к этому готовы? Есть силы и время начать сейчас')}
+   ${yn('urgent','Это срочно? Важно сделать именно в ближайшие месяцы')}
+  </div>
+  <div class="card">
+   <label class="q">Откуда эта цель?</label>
+   ${[['inner','Изнутри: меня к этому давно тянет, никто не заставлял'],['society','Так принято: в моём возрасте, у всех уже есть'],['group','Так заведено в моём кругу или компании']].map(([v,t])=>`<button class="opt radio ${c.source===v?'on':''}" data-act="src" data-v="${v}"><span class="box">✓</span><span class="t">${t}</span></button>`).join('')}
+  </div>
+  ${done?(bad?`<div class="alert warn">Похоже, этот проект сейчас не ваш или не вовремя. Самая дорогая ошибка января: год упорно идти к чужой цели. Можно вернуться и выбрать другой.<br><br><button class="btn small soft" data-act="goto" data-s="5">Выбрать другой проект</button></div>`
+     :`<div class="alert ok">Хочется, есть готовность, срочно, и цель ваша. Отличный проект на год.</div>`):''}`;}},
+
+ {id:'formula',title:'Формула',render:()=>`
+  <h2>Проект в одну строку</h2>
+  <p class="muted">Хорошая цель понятна за одно предложение и имеет признак «готово».</p>
+  <div class="card">
+   <label class="q">Мой проект</label>
+   <div class="hint">Конкретно и просто. Не «наладить отношения», а «каждый вечер час с детьми без телефона».</div>
+   <textarea data-k="f.line">${esc(S.f.line||ptext(S.chosen))}</textarea>
+   <label class="q">Как я пойму, что проект завершён?</label>
+   <div class="hint">То, что можно проверить: цифра, документ, событие. «Бизнес больше не требует моих личных денег».</div>
+   <textarea data-k="f.done">${esc(S.f.done)}</textarea>
+  </div>
+  <div class="card">
+   <label class="q">Что мне придётся делать иначе каждый день?</label>
+   <div class="hint">Если ничего менять не нужно, это не проект. Цель только обёртка, внутри тренируется новое поведение.</div>
+   <textarea data-k="f.behavior">${esc(S.f.behavior)}</textarea>
+   <label class="q">Кем я становлюсь, пока иду к этому?</label>
+   <textarea data-k="f.who" placeholder="Человеком, который...">${esc(S.f.who)}</textarea>
+  </div>
+  <div class="card">
+   <label class="q">Что внутри меня может помешать?</label>
+   <div class="hint">Не обстоятельства, а ваше: страх, усталость, «потом», мысль «у меня не получится».</div>
+   <textarea data-k="f.obstacle">${esc(S.f.obstacle)}</textarea>
+   <label class="q">Если это случится, то я...</label>
+   <div class="hint">Одно конкретное действие. «Если вечером нет сил, то делаю 10 минут вместо часа».</div>
+   <textarea data-k="f.ifthen">${esc(S.f.ifthen)}</textarea>
+  </div>`},
+
+ {id:'temper',title:'Ваш стиль',render:()=>`
+  <h2>Как вам легче двигаться</h2>
+  <p class="muted">Цель, которая держится на силе воли, умирает к середине января. Сила воли нужна на первые шаги, дальше помогает ваша природа. 10 утверждений, оцените от 1 (совсем не про меня) до 5 (точно про меня).</p>
+  <div class="card">${STMT.map((s,i)=>`<div class="stmt"><div style="font-weight:500">${s.t}</div>
+    <div class="scale">${[1,2,3,4,5].map(v=>`<button class="${S.t[i]===v?'on':''}" data-act="sc" data-i="${i}" data-v="${v}">${v}</button>`).join('')}</div>
+    <div class="scalelbl"><span>не про меня</span><span>точно про меня</span></div></div>`).join('')}</div>`},
+
+ {id:'plan',title:'План',render:()=>{
+  const sc=traitScores(); const recs=Object.keys(REC).filter(k=>lvl(sc[k])!=='mid');
+  const cHi=lvl(sc.C)==='hi';
+  return `
+  <h2>Ваша механика</h2>
+  <div class="card">${recs.length?recs.map(k=>{const L=lvl(sc[k]);return `<div class="rec"><span class="ic">${REC[k].ic}</span><div><b>${REC[k].name}: ${L==='hi'?'высокая':'невысокая'}</b>${REC[k][L]}</div></div>`;}).join(''):`<div class="rec"><span class="ic">◎</span><div><b>Сбалансированный профиль</b>Ярко выраженных черт нет, поэтому опирайтесь на две базовые механики: короткий ежедневный план с отметками и обязательство перед напарником.</div></div>`}</div>
+  <div class="card">
+   <label class="q">Сколько времени в день вы даёте проекту?</label>
+   <div class="seg" style="--c:4">${[15,30,60,120].map(m=>`<button class="${S.plan.min===m?'on':''}" data-act="min" data-v="${m}">${m<60?m+' мин':(m/60)+' ч'}</button>`).join('')}</div>
+   <label class="q">Когда именно? Поставьте это в календарь</label>
+   <input type="text" data-k="plan.when" value="${esc(S.plan.when)}" placeholder="Например: будни 7:30 до 8:00">
+   <label class="q">Первый шаг в ближайшие 72 часа</label>
+   <textarea data-k="plan.first" placeholder="Маленький и конкретный">${esc(S.plan.first)}</textarea>
+   <label class="q">Напарник по цели</label>
+   <div class="hint">Человек, который раз в неделю спросит: «Что сделано по проекту и какой прогресс?»</div>
+   <input type="text" data-k="plan.buddy" value="${esc(S.plan.buddy)}" placeholder="Имя">
+   <label class="q">Дедлайн ${cHi?'(вам он поможет)':'(необязательно)'}</label>
+   ${cHi?'':'<div class="hint">Вам может больше подойти правило «пока не готово, следующий не начинаю». Оставьте пустым, если так.</div>'}
+   <input type="text" data-k="plan.deadline" value="${esc(S.plan.deadline)}" placeholder="Например: 31 мая 2027">
+  </div>`;}},
+
+ {id:'card',title:'Карточка',render:()=>`
+  <div class="kicker">Готово</div>
+  <h2>Мой проект 2027</h2>
+  ${projectCard()}
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+   <button class="btn small soft" data-act="copy">Скопировать текст</button>
+   <button class="btn small soft" data-act="goto" data-s="8">Изменить</button>
+  </div>
+  <div class="card gold"><b>Дальше: 42 дня.</b> Самый опасный период для любой цели: третья и пятая неделя, когда первый запал прошёл. Каждый день одна отметка и один вопрос, это занимает минуту.</div>`},
+
+ {id:'track',title:'42 дня',render:()=>trackerView()}
+];
+const LAST_SETUP=10; /* индекс шага «План» */
+
+function opt(x,on,act,radio){return `<button class="opt ${radio?'radio':''} ${on?'on':''}" data-act="${act}" data-i="${x.i}"><span class="box">✓</span><span class="t">${esc(x.t)}</span></button>`;}
+function yn(k,t){const v=S.check[k];return `<label class="q">${t}</label><div class="seg"><button class="${v==='yes'?'on':''}" data-act="yn" data-k="${k}" data-v="yes">Да</button><button class="${v==='no'?'on':''}" data-act="yn" data-k="${k}" data-v="no">Нет</button></div>`;}
+function score(i){return (S.q1.includes(i)?1:0)+(S.q2===i?1:0)+(S.q3.includes(i)?1:0);}
+function suggest(){
+  const f=filled(); if(!f.length) return {i:null,msg:'',need:false};
+  if(S.q3.length){
+    const best=S.q3.slice().sort((a,b)=>score(b)-score(a))[0];
+    return {i:best,need:true,msg:`Есть то, что нужно закрыть в первую очередь: «${esc(ptext(best))}». Когда базовые потребности не закрыты, остальные цели буксуют. Начните с этого.`};
+  }
+  let max=-1,best=null; f.forEach(x=>{const s=score(x.i)+(S.q2===x.i?0.5:0); if(s>max){max=s;best=x.i;}});
+  const sc=score(best);
+  return {i:best,need:false,msg:sc>=2?`Больше всего совпадений у проекта «${esc(ptext(best))}». Чем больше вопросов указали на один проект, тем он ближе к вам.`:`Ответы разошлись. В таком случае берите проект из второго вопроса: «${esc(ptext(best))}». Он закрывает больше остального.`};
+}
+function projectCard(){
+  const rows=[['Готово, когда',S.f.done],['Новое поведение',S.f.behavior],['Кем я становлюсь',S.f.who],['Если помешает',S.f.obstacle&&S.f.ifthen?S.f.obstacle+' → '+S.f.ifthen:S.f.ifthen],
+   ['Время',(S.plan.min?(S.plan.min<60?S.plan.min+' мин':(S.plan.min/60)+' ч')+' в день':'')+(S.plan.when?', '+S.plan.when:'')],['Первый шаг',S.plan.first],['Напарник',S.plan.buddy],['Дедлайн',S.plan.deadline]].filter(r=>r[1]&&String(r[1]).trim());
+  return `<div class="card navy pcard"><div class="muted">Один проект 2027</div><div class="line">${esc(S.f.line||ptext(S.chosen))}</div>
+   ${rows.map(r=>`<div class="row"><div class="k">${r[0]}</div>${esc(r[1])}</div>`).join('')}</div>`;
+}
+function cardText(){
+  const L=[ 'МОЙ ПРОЕКТ 2027', S.f.line||ptext(S.chosen), '', 'Готово, когда: '+S.f.done, 'Новое поведение: '+S.f.behavior];
+  if(S.f.who)L.push('Кем я становлюсь: '+S.f.who);
+  if(S.f.ifthen)L.push('Если помешает: '+(S.f.obstacle?S.f.obstacle+' → ':'')+S.f.ifthen);
+  if(S.plan.first)L.push('Первый шаг: '+S.plan.first);
+  if(S.plan.when)L.push('Когда: '+S.plan.when);
+  if(S.plan.deadline)L.push('Дедлайн: '+S.plan.deadline);
+  return L.join('\n');
+}
+
+function trackerView(){
+  const n=dayN();
+  if(!S.start) return `<h2>42 дня</h2><div class="card">Нажмите «Начать», и сегодня станет днём 1.</div>`;
+  const today=ymd(new Date()); const e=S.log[today]||{};
+  const q=DAILY[(Math.max(n,1)-1)%DAILY.length];
+  const finished=n>42;
+  let cells='';
+  for(let d=1;d<=42;d++){const dt=new Date(parseYmd(S.start));dt.setDate(dt.getDate()+d-1);const k=ymd(dt);const st=(S.log[k]||{}).s;
+    cells+=`<div class="${st||''} ${d===n?'today':''} ${d>n?'future':''}">${d}</div>`;}
+  const yes=Object.values(S.log).filter(x=>x.s==='yes').length, part=Object.values(S.log).filter(x=>x.s==='part').length;
+  const week=Math.ceil(n/7);
+  return `
+  <div class="top"><span>${finished?'42 дня позади':'День '+n+' из 42'}</span><span>${yes} ✓ · ${part} ½</span></div>
+  <div class="progress"><i style="width:${Math.min(100,n/42*100)}%"></i></div>
+  <div class="card navy"><div class="muted">Мой проект</div><div style="font-family:var(--serif);font-size:21px;margin-top:2px">${esc(S.f.line||ptext(S.chosen))}</div></div>
+  ${finished?`<div class="card gold"><b>Вы прошли 42 дня.</b> Посмотрите на сетку: это факты, а не ощущения. Какие мысли о себе вы забираете из этих шести недель? Если проект ещё не готов, продолжайте: правило то же, один проект, пока не завершён.</div>`:`
+  ${(week===3||week===5)?`<div class="alert warn"><b>Неделя ${week}.</b> Именно сейчас многие сдуваются: первый запал прошёл, а результат ещё не виден. Это нормальный этап, а не знак, что «у меня опять не получается». Уменьшите шаг, но не пропускайте.</div>`:''}
+  <div class="card"><div class="kicker">Вопрос дня</div><div class="bigq">${q}</div>
+   <textarea data-k="log.${today}.note" style="margin-top:12px" placeholder="Пара строк">${esc(e.note||'')}</textarea></div>
+  <div class="card"><b>Шаг по проекту сегодня</b>
+   <div class="seg" style="--c:3;margin-top:10px">
+    <button class="${e.s==='yes'?'on':''}" data-act="day" data-v="yes">Сделан</button>
+    <button class="${e.s==='part'?'on':''}" data-act="day" data-v="part">Частично</button>
+    <button class="${e.s==='no'?'on':''}" data-act="day" data-v="no">Сегодня нет</button>
+   </div>
+   ${e.s==='no'?`<div style="margin-top:14px">
+     <div class="hint" style="margin-bottom:10px">Разберём без «я опять». Срыв это просто информация.</div>
+     <label class="q">Что произошло по фактам?</label><textarea data-k="log.${today}.fact">${esc(e.fact||'')}</textarea>
+     <label class="q">Какое значение вы этому придали? Это правда?</label><textarea data-k="log.${today}.meaning" placeholder="Например: «я слабая». Факт или мысль?">${esc(e.meaning||'')}</textarea>
+     <label class="q">Самый маленький шаг на завтра</label><textarea data-k="log.${today}.next">${esc(e.next||'')}</textarea>
+     ${S.f.ifthen?`<div class="alert ok" style="margin-bottom:0">Ваш план на такой случай: ${esc(S.f.ifthen)}</div>`:''}
+   </div>`:''}
+   ${e.s==='yes'?`<div class="alert ok" style="margin-bottom:0">Как у вас это сегодня получилось? Запомните, что сработало, это и есть ваша механика.</div>`:''}
+  </div>`}
+  <div class="card"><b>Сетка 42 дней</b><div class="grid42">${cells}</div></div>
+  <details class="card"><summary style="cursor:pointer;font-weight:600">Карточка проекта</summary><div style="margin-top:12px">${projectCard()}</div></details>
+  <button class="reset" data-act="reset">Начать всё заново</button>`;
+}
+
+/* ---------- проверка перед «Далее» ---------- */
+function canNext(){
+  const id=STEPS[S.step].id;
+  if(id==='list'&&filled().length<5) return 'Запишите хотя бы 5 проектов';
+  if(id==='q1'&&!S.q1.length) return 'Отметьте от одного до трёх';
+  if(id==='q2'&&S.q2==null) return 'Выберите один проект';
+  if(id==='result'&&S.chosen==null) return 'Выберите проект';
+  if(id==='check'){const c=S.check;if(!(c.want&&c.ready&&c.urgent&&c.source))return 'Ответьте на все вопросы';}
+  if(id==='formula'){ if(!S.f.line.trim()) S.f.line=ptext(S.chosen); if(!S.f.done.trim()) return 'Опишите, как поймёте, что проект завершён'; if(!S.f.behavior.trim()) return 'Опишите новое поведение';}
+  if(id==='temper'&&S.t.some(v=>v==null)) return 'Оцените все 10 утверждений';
+  if(id==='plan'&&!S.plan.first.trim()) return 'Запишите первый шаг';
+  return '';
+}
+
+/* ---------- отрисовка ---------- */
+function render(){
+  const st=STEPS[S.step];
+  const showProg=S.step>0&&S.step<=LAST_SETUP;
+  $('#app').innerHTML=(showProg?`<div class="top"><span>${st.title}</span><span>${S.step} / ${LAST_SETUP}</span></div><div class="progress"><i style="width:${S.step/LAST_SETUP*100}%"></i></div>`:'')+st.render();
+  const bar=$('#bar');
+  if(st.id==='intro') bar.innerHTML=`<button class="btn" data-act="next">${filled().length?'Продолжить':'Начать'}</button>`;
+  else if(st.id==='card') bar.innerHTML=`<button class="btn ghost" data-act="back">Назад</button><button class="btn" data-act="start">${S.start?'К 42 дням':'Начать 42 дня'}</button>`;
+  else if(st.id==='track') bar.innerHTML=`<button class="btn ghost" data-act="goto" data-s="11">Карточка</button>`;
+  else bar.innerHTML=`<button class="btn ghost" data-act="back">Назад</button><button class="btn" data-act="next">${S.step===LAST_SETUP?'Собрать карточку':'Далее'}</button>`;
+}
+function go(s){S.step=Math.max(0,Math.min(STEPS.length-1,s));save();render();window.scrollTo({top:0,behavior:'instant'});}
+
+document.addEventListener('input',e=>{
+  const k=e.target.dataset.k; if(!k) return;
+  if(k.startsWith('log.')){const [,d,f]=k.split('.');S.log[d]=S.log[d]||{};S.log[d][f]=e.target.value;}
+  else setPath(k,e.target.value);
+  save();
+});
+document.addEventListener('click',e=>{
+  const tr=e.target.closest('.trap .h');
+  if(tr){const id=tr.parentElement.dataset.trap;const a=S.year.traps;const i=a.indexOf(id);i>=0?a.splice(i,1):a.push(id);tr.parentElement.classList.toggle('on');save();return;}
+  const b=e.target.closest('[data-act]'); if(!b) return;
+  const act=b.dataset.act, i=b.dataset.i!=null?+b.dataset.i:null;
+  switch(act){
+    case 'next':{const m=canNext(); if(m){toast(m);return;} go(S.step+1); return;}
+    case 'back': go(S.step-1); return;
+    case 'goto': go(+b.dataset.s); return;
+    case 'q1':{const a=S.q1,j=a.indexOf(i); if(j>=0)a.splice(j,1); else {if(a.length>=3){toast('Не больше трёх');return;} a.push(i);} break;}
+    case 'q2': S.q2=i; break;
+    case 'q3':{const a=S.q3,j=a.indexOf(i); j>=0?a.splice(j,1):a.push(i); break;}
+    case 'choose': if(S.chosen!==i){S.chosen=i; S.f.line='';} break;
+    case 'yn': S.check[b.dataset.k]=b.dataset.v; break;
+    case 'src': S.check.source=b.dataset.v; break;
+    case 'sc': S.t[i]=+b.dataset.v; break;
+    case 'min': S.plan.min=+b.dataset.v; break;
+    case 'copy': (navigator.clipboard?navigator.clipboard.writeText(cardText()):Promise.reject()).then(()=>toast('Скопировано. Отправьте напарнику')).catch(()=>toast('Не получилось скопировать')); return;
+    case 'start': if(!S.start) S.start=ymd(new Date()); go(12); return;
+    case 'day':{const d=ymd(new Date()); S.log[d]=S.log[d]||{}; S.log[d].s=b.dataset.v; break;}
+    case 'reset': if(confirm('Стереть все ответы и начать заново?')){S=blank();save();go(0);} return;
+  }
+  save();
+  const y=window.scrollY; render(); window.scrollTo(0,y);
+});
+
+render();
+</script>
+</body>
+</html>
